@@ -89,8 +89,7 @@ http://127.0.0.1:5000
 ├── 📁 logs
 │   └── 📄 activity.json
 ├── 📄 .gitignore
-├── 📄 123.py
-├── 📄 PROJECT_TREE.md
+├── 📄 LICENSE
 ├── 📄 README.md
 └── 📄 requirements.txt
 ```
