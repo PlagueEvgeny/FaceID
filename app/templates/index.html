@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">
+                <i class="fas fa-user-check text-primary me-3"></i>
+                FaceID
+            </h1>
+            <p class="lead text-muted">
+                Система распознавания лиц на основе Flask и OpenCV
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-camera fa-3x text-success"></i>
+                        </div>
+                        <h5 class="card-title">Сканировать лицо</h5>
+                        <p class="card-text">
+                            Соберите данные лица для обучения системы распознавания
+                        </p>
+                        <a href="{{ url_for('main.collect_data_page') }}" class="btn btn-success btn-lg">
+                            <i class="fas fa-camera me-2"></i>Начать сбор
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-search fa-3x text-info"></i>
+                        </div>
+                        <h5 class="card-title">Распознать лицо</h5>
+                        <p class="card-text">
+                            Запустите систему распознавания лиц в реальном времени
+                        </p>
+                        <a href="{{ url_for('main.recognize_page') }}" class="btn btn-info btn-lg">
+                            <i class="fas fa-search me-2"></i>Распознать
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Статус системы
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="system-status">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Загрузка...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Загрузка статуса системы
+function loadSystemStatus() {
+    fetch('/get_status')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка сети');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const statusDiv = document.getElementById('system-status');
+            
+            // Если есть ошибка
+            if (data.error) {
+                statusDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Ошибка системы: ${data.error}
+                    </div>
+                `;
+                return;
+            }
+
+            statusDiv.innerHTML = `
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-video ${data.camera_ready ? 'text-success pulse' : 'text-danger'} fa-2x"></i>
+                            <div class="mt-2">
+                                <small class="text-muted">Камера</small><br>
+                                <span class="badge ${data.camera_ready ? 'bg-success' : 'bg-danger'}">
+                                    ${data.camera_ready ? '✓ Готова' : '✗ Не готова'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-brain ${data.model_trained && data.model_exists ? 'text-success' : 'text-warning'} fa-2x"></i>
+                            <div class="mt-2">
+                                <small class="text-muted">Модель</small><br>
+                                <span class="badge ${data.model_trained && data.model_exists ? 'bg-success' : 'bg-warning'}">
+                                    ${data.model_trained && data.model_exists ? '✓ Обучена' : 'Не обучена'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-database ${data.total_data_count > 0 ? 'text-success' : 'text-secondary'} fa-2x"></i>
+                            <div class="mt-2">
+                                <small class="text-muted">Данные</small><br>
+                                <span class="badge ${data.total_data_count > 0 ? 'bg-success' : 'bg-secondary'}">
+                                    ${data.total_data_count} изображений
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-cog ${data.is_collecting ? 'fa-spin text-primary' : 'text-success'} fa-2x"></i>
+                            <div class="mt-2">
+                                <small class="text-muted">Статус</small><br>
+                                <span class="badge ${data.is_collecting ? 'bg-primary' : 'bg-success'}">
+                                    ${data.is_collecting ? 'Сбор данных' : 'Готов'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ${!data.camera_ready ? `
+                <div class="alert alert-warning mt-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Камера не доступна. Убедитесь, что камера подключена и не используется другими приложениями.
+                </div>
+                ` : ''}
+                ${data.total_data_count === 0 ? `
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Данные для обучения отсутствуют. Перейдите в раздел "Сканировать лицо" для сбора данных.
+                </div>
+                ` : ''}
+            `;
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки статуса:', error);
+            document.getElementById('system-status').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Ошибка загрузки статуса системы: ${error.message}
+                </div>
+            `;
+        });
+}
+
+// Загружаем статус при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    loadSystemStatus();
+    
+    // Обновляем статус каждые 3 секунды
+    setInterval(loadSystemStatus, 3000);
+});
+
+// Добавляем обработчик для ручного обновления
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'r' && e.ctrlKey) {
+        e.preventDefault();
+        loadSystemStatus();
+        showToast('Статус обновлен');
+    }
+});
+
+function showToast(message) {
+    // Простая реализация toast уведомления
+    const toast = document.createElement('div');
+    toast.className = 'position-fixed bottom-0 end-0 m-3 alert alert-info';
+    toast.style.zIndex = '1050';
+    toast.innerHTML = `<i class="fas fa-sync me-2"></i>${message}`;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 2000);
+}
+</script>
+{% endblock %}

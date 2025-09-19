@@ -1,0 +1,17 @@
+{
+  "names": {
+    "0": "Evgeniy",
+    "1": "gospozha"
+  },
+  "original_names": {
+    "Evgeniy": "Евгений",
+    "gospozha": "Госпожа"
+  },
+  "image_size": [
+    130,
+    100
+  ],
+  "confidence_threshold": 100,
+  "unknown_threshold": 80,
+  "training_date": "2025-09-19T10:51:29.013764"
+}

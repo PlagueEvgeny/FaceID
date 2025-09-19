@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Сбор данных - FaceID{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="text-center mb-4">
+            <h2>
+                <i class="fas fa-camera text-success me-2"></i>
+                Сбор данных лица
+            </h2>
+            <p class="text-muted">
+                Введите имя и начните сбор изображений лица для обучения системы
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user-plus me-2"></i>
+                            Настройки
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="collection-form">
+                            <div class="mb-3">
+                                <label for="person-name" class="form-label">Имя человека</label>
+                                <input type="text" class="form-control" id="person-name" 
+                                       placeholder="Введите имя" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Прогресс сбора</label>
+                                <div class="progress">
+                                    <div id="progress-bar" class="progress-bar bg-success" 
+                                         role="progressbar" style="width: 0%">
+                                        0/100
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" id="start-btn" class="btn btn-success">
+                                    <i class="fas fa-play me-2"></i>
+                                    Начать сбор
+                                </button>
+                                <button type="button" id="stop-btn" class="btn btn-danger" 
+                                        style="display: none;">
+                                    <i class="fas fa-stop me-2"></i>
+                                    Остановить
+                                </button>
+                                <button type="button" id="train-btn" class="btn btn-primary" 
+                                        style="display: none;">
+                                    <i class="fas fa-brain me-2"></i>
+                                    Обучить модель
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="status-messages" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Инструкции
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled small">
+                            <li><i class="fas fa-check text-success me-2"></i>Смотрите прямо в камеру</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Поворачивайте голову в разные стороны</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Меняйте выражение лица</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Обеспечьте хорошее освещение</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-video me-2"></i>
+                            Видео поток
+                        </h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <img id="video-stream" src="{{ url_for('main.video_feed') }}" 
+                             class="img-fluid rounded" alt="Видео поток"
+                             style="max-height: 400px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let isCollecting = false;
+let collectionInterval;
+
+document.getElementById('collection-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    startCollection();
+});
+
+document.getElementById('stop-btn').addEventListener('click', stopCollection);
+document.getElementById('train-btn').addEventListener('click', trainModel);
+
+function startCollection() {
+    const personName = document.getElementById('person-name').value.trim();
+    
+    if (!personName) {
+        showMessage('Введите имя человека', 'danger');
+        return;
+    }
+
+    fetch('/start_collection', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: personName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            isCollecting = true;
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('stop-btn').style.display = 'block';
+            document.getElementById('person-name').disabled = true;
+            
+            showMessage(data.message, 'success');
+            
+            // Начинаем отслеживание прогресса
+            collectionInterval = setInterval(updateProgress, 1000);
+        } else {
+            showMessage(data.message, 'danger');
+        }
+    })
+    .catch(error => {
+        showMessage('Ошибка запуска сбора данных', 'danger');
+        console.error('Error:', error);
+    });
+}
+
+function stopCollection() {
+    fetch('/stop_collection', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        isCollecting = false;
+        document.getElementById('start-btn').style.display = 'block';
+        document.getElementById('stop-btn').style.display = 'none';
+        document.getElementById('train-btn').style.display = 'block';
+        document.getElementById('person-name').disabled = false;
+        
+        clearInterval(collectionInterval);
+        showMessage(data.message, 'info');
+    })
+    .catch(error => {
+        showMessage('Ошибка остановки сбора данных', 'danger');
+        console.error('Error:', error);
+    });
+}
+
+function trainModel() {
+    showMessage('Начинается обучение модели...', 'info');
+    
+    fetch('/train_model', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showMessage(data.message, 'success');
+            document.getElementById('train-btn').style.display = 'none';
+        } else {
+            showMessage(data.message, 'danger');
+        }
+    })
+    .catch(error => {
+        showMessage('Ошибка обучения модели', 'danger');
+        console.error('Error:', error);
+    });
+}
+
+function updateProgress() {
+    fetch('/get_status')
+        .then(response => response.json())
+        .then(data => {
+            const progress = Math.min((data.collected_count / 200) * 100, 200);
+            const progressBar = document.getElementById('progress-bar');
+            
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = `${data.collected_count}/200`;
+            
+            if (data.collected_count >= 200 && isCollecting) {
+                stopCollection();
+                showMessage('Сбор данных завершен! Можно обучить модель.', 'success');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка обновления прогресса:', error);
+        });
+}
+
+function showMessage(message, type) {
+    const messagesDiv = document.getElementById('status-messages');
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    messagesDiv.appendChild(alertDiv);
+    
+    // Автоматически удаляем сообщение через 5 секунд
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+
+// Обновляем прогресс при загрузке страницы
+document.addEventListener('DOMContentLoaded', updateProgress);
+</script>
+{% endblock %}

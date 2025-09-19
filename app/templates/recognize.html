@@ -1,0 +1,763 @@
+{% extends "base.html" %}
+
+{% block title %}Распознавание - FaceID{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="text-center mb-4">
+            <h2>
+                <i class="fas fa-search text-info me-2"></i>
+                Распознавание лиц
+            </h2>
+            <p class="text-muted">
+                Система распознавания лиц в реальном времени
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-video me-2"></i>
+                            Видео поток
+                        </h5>
+                        <div>
+                            <button id="toggle-recognition" class="btn btn-success btn-sm">
+                                <i class="fas fa-play me-1"></i>
+                                Запустить
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
+                        <img id="video-stream" src="{{ url_for('main.video_feed') }}" 
+                             class="img-fluid rounded" alt="Видео поток"
+                             style="max-height: 500px;">
+                    </div>
+                </div>
+
+                <!-- Added statistics card -->
+                <div class="card mt-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            Статистика распознавания
+                        </h6>
+                        <button id="reset-stats" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-redo me-1"></i>
+                            Сброс
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-3">
+                                <div class="text-primary">
+                                    <i class="fas fa-eye fa-2x"></i>
+                                    <div class="mt-1">
+                                        <strong id="total-faces">0</strong>
+                                        <small class="d-block text-muted">Всего лиц</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="text-success">
+                                    <i class="fas fa-check-circle fa-2x"></i>
+                                    <div class="mt-1">
+                                        <strong id="known-faces">0</strong>
+                                        <small class="d-block text-muted">Известных</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="text-danger">
+                                    <i class="fas fa-question-circle fa-2x"></i>
+                                    <div class="mt-1">
+                                        <strong id="unknown-faces">0</strong>
+                                        <small class="d-block text-muted">Неизвестных</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="text-info">
+                                    <i class="fas fa-user fa-2x"></i>
+                                    <div class="mt-1">
+                                        <strong id="last-recognized">-</strong>
+                                        <small class="d-block text-muted">Последний</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-upload me-2"></i>
+                            Загрузить изображение
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <form id="upload-form" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input type="file" class="form-control" id="image-file" 
+                                           accept="image/*" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-search me-1"></i>
+                                        Распознать
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div id="upload-result" class="mt-3" style="display: none;">
+                            <div class="text-center">
+                                <img id="processed-image" class="img-fluid rounded" 
+                                     style="max-height: 300px;">
+                            </div>
+                            <div id="recognition-results" class="mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!-- Added people management card -->
+                <div class="card mt-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="fas fa-users me-2"></i> База данных лиц</h6>
+                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#people-db">
+                        <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="people-db" class="collapse show">
+                    <div class="card-body">
+                        <div id="people-list">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">Загрузка...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="refresh-people" class="btn btn-outline-primary btn-sm w-100 mt-2">
+                            <i class="fas fa-sync me-1"></i>
+                            Обновить список
+                        </button>
+                    </div>
+                </div>
+                </div>
+                <!-- ================= ПАРАМЕТРЫ КАСКАДА ================= -->
+                <div class="card mt-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                        <i class="fas fa-sliders-h me-2"></i> Параметры каскада
+                        </h6>
+                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#cascade-settings">
+                        <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="cascade-settings" class="collapse">
+                <div class="card-body">
+                    <label>Коэффициент масштаба (Scale Factor): <span id="scale-value">1.1</span></label>
+                    <input type="range" id="scaleFactor" min="1.01" max="1.5" step="0.01" value="1.1" class="form-range"
+                        oninput="document.getElementById('scale-value').textContent=this.value">
+                    <small class="text-muted d-block">
+                    Чем ближе к 1.0 — тем точнее поиск, но медленнее работа.
+                    </small>
+
+                    <label class="mt-3">Минимальные соседи (Min Neighbors): <span id="neighbors-value">5</span></label>
+                    <input type="range" id="minNeighbors" min="1" max="10" step="1" value="5" class="form-range"
+                        oninput="document.getElementById('neighbors-value').textContent=this.value">
+                    <small class="text-muted d-block">
+                    Больше значение = меньше ложных срабатываний, но лица могут пропускаться.
+                    </small>
+
+                    <label class="mt-3">Минимальный размер лица (Min Size): <span id="minsize-value">30</span></label>
+                    <input type="range" id="minSize" min="10" max="200" step="5" value="30" class="form-range"
+                        oninput="document.getElementById('minsize-value').textContent=this.value">
+                    <small class="text-muted d-block">
+                    Минимальная ширина/высота лица в пикселях, которое будет распознано.
+                    </small>
+
+                    <label class="mt-3">Максимальный размер лица (Max Size): <span id="maxsize-value">500</span></label>
+                    <input type="range" id="maxSize" min="100" max="1000" step="10" value="500" class="form-range"
+                        oninput="document.getElementById('maxsize-value').textContent=this.value">
+                    <small class="text-muted d-block">
+                    Максимальная ширина/высота лица в пикселях, которое будет распознано.
+                    </small>
+
+                    <button class="btn btn-outline-primary btn-sm w-100 mt-3" onclick="updateCascadeParams()">
+                    <i class="fas fa-save me-1"></i> Обновить параметры
+                    </button>
+                </div>
+                </div>
+                </div>
+
+                <!-- ================= НАСТРОЙКИ КАМЕРЫ ================= -->
+                    <div class="card mt-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="fas fa-video me-2"></i> Настройки камеры</h6>
+                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#camera-settings">
+                        <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="camera-settings" class="collapse">
+                        <div class="card-body">
+                    <label>Номер камеры (Index):</label>
+                    <input type="number" id="cam-index" value="0" class="form-control mb-1">
+                    <small class="text-muted d-block mb-2">
+                    0 — встроенная, 1 и выше — внешние камеры (USB / IP).
+                    </small>
+
+                    <label>Разрешение (Width × Height):</label>
+                    <div class="d-flex gap-2 mb-1">
+                    <input type="number" id="cam-width" value="640" class="form-control">
+                    <input type="number" id="cam-height" value="480" class="form-control">
+                    </div>
+                    <small class="text-muted d-block mb-2">
+                    Оптимальные значения: 640×480 или 1280×720. Большее = выше нагрузка.
+                    </small>
+
+                    <label>Кадров в секунду (FPS):</label>
+                    <input type="number" id="cam-fps" value="30" class="form-control mb-1">
+                    <small class="text-muted d-block mb-2">
+                    15–30 FPS достаточно для распознавания. Больше = плавнее, но выше нагрузка.
+                    </small>
+
+                    <button class="btn btn-outline-primary btn-sm w-100" onclick="updateCamera()">
+                    <i class="fas fa-save me-1"></i> Применить
+                    </button>
+                </div>
+                </div>
+                </div>
+                    <div class="card mt-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="fas fa-cog me-2"></i> Настройки</h6>
+                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#main-settings">
+                        <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="main-settings" class="collapse show">
+                        <div class="card-body">
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="require-eyes-switch">
+                            <label class="form-check-label" for="require-eyes-switch">
+                                Требовать глаза для распознавания
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confidence-threshold" class="form-label">
+                                Порог уверенности: <span id="threshold-value">100</span>
+                            </label>
+                            <input type="range" id="confidence-threshold" min="50" max="200" step="10" value="100" class="form-range"
+                                oninput="document.getElementById('threshold-value').textContent=this.value">
+                            <small class="text-muted">
+                                Чем меньше значение, тем строже распознавание
+                            </small>
+                        </div>
+                        <div class="mb-3">
+                            <label>Порог для неизвестных лиц: <span id="unknown-threshold-value">80</span></label>
+                            <input type="range" id="unknown-threshold" min="50" max="150" step="1" value="80" class="form-range"
+                                oninput="document.getElementById('unknown-threshold-value').textContent=this.value">
+                            <small class="text-muted d-block">
+                            Если расстояние больше порога — лицо считается неизвестным.<br>
+                            Меньше значение → строже, больше значение → мягче.
+                            </small>
+                        </div>
+                        
+                        <button id="update-threshold" class="btn btn-outline-primary btn-sm w-100">
+                            <i class="fas fa-save me-1"></i>
+                            Обновить порог уверенности
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm w-100 mt-2" onclick="updateUnknownThreshold()">
+                        <i class="fas fa-save me-1"></i> Обновить порог для неизвестных лиц
+                        </button>
+                    </div>
+                    
+                </div>
+                </div>
+
+                <!-- ================= ИНФОРМАЦИЯ О МОДЕЛИ ================= -->
+                <div class="card mt-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i> Информация о модели</h6>
+                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#model-info-box">
+                    <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="model-info-box" class="collapse show">
+                    <div class="card-body">
+                    <div id="model-info">
+                        <div class="d-flex justify-content-center">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                            <span class="visually-hidden">Загрузка...</span>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <div class="card mt-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i> Тестирование</h6>
+                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#testing-box">
+                    <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="testing-box" class="collapse show">
+                    <div class="card-body">
+                        <button id="test-accuracy" class="btn btn-outline-info btn-sm w-100">
+                            <i class="fas fa-flask me-1"></i>
+                            Тест точности
+                        </button>
+                        <div id="accuracy-results" class="mt-2" style="display: none;"></div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let recognitionActive = false;
+
+const slider_threshold = document.getElementById('confidence-threshold');
+const slider_unknown_threshold = document.getElementById('unknown-threshold');
+
+// Загрузка предыдущих значений
+if (localStorage.getItem('confidenceThreshold')) {
+    slider_threshold.value = localStorage.getItem('confidenceThreshold');
+    document.getElementById('threshold-value').textContent = slider_threshold.value;
+}
+if (localStorage.getItem('unknownThreshold')) {
+    slider_unknown_threshold.value = localStorage.getItem('unknownThreshold');
+    document.getElementById('unknown-threshold-value').textContent = slider_unknown_threshold.value;
+}
+
+// Сохранение в localStorage при изменении
+slider_threshold.addEventListener('input', function() {
+    document.getElementById('threshold-value').textContent = this.value;
+    localStorage.setItem('confidenceThreshold', this.value);
+});
+
+slider_unknown_threshold.addEventListener('input', function() {
+    document.getElementById('unknown-threshold-value').textContent = this.value;
+    localStorage.setItem('unknownThreshold', this.value);
+});
+
+// Обработчики событий
+document.getElementById('toggle-recognition').addEventListener('click', toggleRecognition);
+document.getElementById('upload-form').addEventListener('submit', uploadImage);
+document.getElementById('update-threshold').addEventListener('click', updateThreshold);
+document.getElementById('test-accuracy').addEventListener('click', testAccuracy);
+document.getElementById('reset-stats').addEventListener('click', resetStats);
+document.getElementById('refresh-people').addEventListener('click', loadPeopleList);
+
+// Обновление отображения порога
+document.getElementById('confidence-threshold').addEventListener('input', function() {
+    document.getElementById('threshold-value').textContent = this.value;
+});
+
+function toggleRecognition() {
+    const btn = document.getElementById('toggle-recognition');
+    
+    if (recognitionActive) {
+        btn.innerHTML = '<i class="fas fa-play me-1"></i> Запустить';
+        btn.className = 'btn btn-success btn-sm';
+        recognitionActive = false;
+    } else {
+        btn.innerHTML = '<i class="fas fa-pause me-1"></i> Остановить';
+        btn.className = 'btn btn-danger btn-sm';
+        recognitionActive = true;
+    }
+}
+
+function updateStats() {
+    fetch('/get_stats')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('total-faces').textContent = data.total_faces_detected;
+            document.getElementById('known-faces').textContent = data.known_faces;
+            document.getElementById('unknown-faces').textContent = data.unknown_faces;
+            document.getElementById('last-recognized').textContent = data.last_recognized || '-';
+        })
+        .catch(error => {
+            console.error('Error updating stats:', error);
+        });
+}
+
+function resetStats() {
+    fetch('/reset_stats', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateStats();
+            showToast('Статистика сброшена', 'success');
+        } else {
+            showToast('Ошибка сброса статистики', 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Ошибка сброса статистики', 'danger');
+    });
+}
+
+function loadPeopleList() {
+    fetch('/get_people_list')
+        .then(response => response.json())
+        .then(data => {
+            let listHtml = '';
+            
+            if (data.length === 0) {
+                listHtml = '<div class="text-muted text-center">База данных пуста</div>';
+            } else {
+                listHtml = '<div class="list-group list-group-flush">';
+                data.forEach(person => {
+                    listHtml += `
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <div>
+                                <strong>${person.name}</strong>
+                                <small class="text-muted d-block">${person.image_count} изображений</small>
+                            </div>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deletePerson('${person.name}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+                listHtml += '</div>';
+            }
+            
+            document.getElementById('people-list').innerHTML = listHtml;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('people-list').innerHTML = 
+                '<div class="text-danger">Ошибка загрузки списка</div>';
+        });
+}
+
+function updateUnknownThreshold() {
+    const value = document.getElementById("unknown-threshold").value;
+    fetch("/api/update_unknown_threshold", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: value })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            showToast("Порог для неизвестных лиц обновлён: " + data.UNKNOWN_THRESHOLD, 'success');
+        } else {
+            showToast("Ошибка: " + data.message, 'danger');
+        }
+    });
+}
+
+function updateCascadeParams() {
+    const params = {
+        scaleFactor: parseFloat(document.getElementById('scaleFactor').value),
+        minNeighbors: parseInt(document.getElementById('minNeighbors').value),
+        minSize: parseInt(document.getElementById('minSize').value),
+        maxSize: parseInt(document.getElementById('maxSize').value),
+    };
+
+    fetch('/api/update_cascade_params', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) showToast("Параметры каскада обновлены", "success");
+        else showToast("Ошибка обновления", "danger");
+    });
+}
+
+function updateCamera() {
+    const settings = {
+        index: parseInt(document.getElementById('cam-index').value),
+        width: parseInt(document.getElementById('cam-width').value),
+        height: parseInt(document.getElementById('cam-height').value),
+        fps: parseInt(document.getElementById('cam-fps').value),
+    };
+
+    fetch('/api/update_camera', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) showToast("Камера обновлена", "success");
+        else showToast("Ошибка: " + data.message, "danger");
+    });
+}   
+
+function deletePerson(name) {
+    if (!confirm(`Удалить все данные для "${name}"?`)) {
+        return;
+    }
+    
+    fetch('/delete_person', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: name })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            loadPeopleList();
+            loadModelInfo();
+            showToast(`Данные для ${name} удалены`, 'success');
+        } else {
+            showToast('Ошибка удаления: ' + data.message, 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Ошибка удаления', 'danger');
+    });
+}
+
+function uploadImage(e) {
+    e.preventDefault();
+    
+    const fileInput = document.getElementById('image-file');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Выберите изображение');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    fetch('/api/recognize_image', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('processed-image').src = 'data:image/jpeg;base64,' + data.processed_image;
+            
+            let resultsHtml = `<div class="alert alert-info">
+                <strong>Найдено лиц: ${data.faces_found}</strong>
+            </div>`;
+            
+            if (data.results.length > 0) {
+                resultsHtml += '<div class="list-group">';
+                data.results.forEach((result, index) => {
+                    const badgeClass = result.recognized ? 'bg-success' : 'bg-danger';
+                    resultsHtml += `
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Лицо ${index + 1}: ${result.name}</span>
+                                <span class="badge ${badgeClass}">${result.confidence.toFixed(0)}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                resultsHtml += '</div>';
+            }
+            
+            document.getElementById('recognition-results').innerHTML = resultsHtml;
+            document.getElementById('upload-result').style.display = 'block';
+        } else {
+            alert('Ошибка: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Ошибка загрузки изображения');
+    });
+}
+
+function updateThreshold() {
+    const threshold = document.getElementById('confidence-threshold').value;
+    
+    fetch('/api/update_threshold', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ threshold: parseInt(threshold) })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            showToast("Порог для неизвестных лиц обновлён: " + data.CONFIDENCE_THRESHOLD, 'success');
+        } else {
+            showToast("Ошибка: " + data.message, 'danger');
+        }
+    });
+}
+
+function testAccuracy() {
+    const btn = document.getElementById('test-accuracy');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Тестирование...';
+    
+    fetch('/api/test_accuracy', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ test_images_per_person: 5 })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const results = data.results;
+            let resultsHtml = `
+                <div class="alert alert-success">
+                    <strong>Общая точность: ${(results.overall_accuracy * 100).toFixed(1)}%</strong><br>
+                    <small>Тестов: ${results.total_tests}, Правильных: ${results.correct_predictions}</small>
+                </div>
+            `;
+            
+            if (results.per_person) {
+                resultsHtml += '<div class="mt-2">';
+                for (const [person, stats] of Object.entries(results.per_person)) {
+                    const accuracy = (stats.accuracy * 100).toFixed(1);
+                    resultsHtml += `
+                        <div class="d-flex justify-content-between">
+                            <small>${person}:</small>
+                            <small>${accuracy}% (${stats.correct}/${stats.total})</small>
+                        </div>
+                    `;
+                }
+                resultsHtml += '</div>';
+            }
+            
+            document.getElementById('accuracy-results').innerHTML = resultsHtml;
+            document.getElementById('accuracy-results').style.display = 'block';
+        } else {
+            showToast('Ошибка тестирования: ' + data.message, 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Ошибка тестирования', 'danger');
+    })
+    .finally(() => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-flask me-1"></i> Тест точности';
+    });
+}
+
+function loadModelInfo() {
+    fetch('/get_status')
+        .then(response => response.json())
+        .then(data => {
+            let infoHtml = '';
+
+            if (data.model_trained) {
+                infoHtml = `
+                    <div class="text-success mb-2">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Модель обучена
+                    </div>
+                    <small class="text-muted">
+                        Каскад лица: ${data.face_cascade_loaded ? 'Загружен' : 'Ошибка'}<br>
+                        Каскад глаз: ${data.eye_cascade_loaded ? 'Загружен' : 'Ошибка'}<br>
+                        Камера: ${data.camera_ready ? 'Готова' : 'Не готова'}<br>
+                        Режим глаз: ${data.require_eyes_for_face ? 'ВКЛ' : 'ВЫКЛ'}<br>
+                        Статус: Готов к работе
+                    </small>
+                `;
+            } else {
+                infoHtml = `
+                    <div class="text-warning">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Модель не обучена
+                    </div>
+                    <small class="text-muted">
+                        Каскад лица: ${data.face_cascade_loaded ? 'Загружен' : 'Ошибка'}<br>
+                        Каскад глаз: ${data.eye_cascade_loaded ? 'Загружен' : 'Ошибка'}<br>
+                        Камера: ${data.camera_ready ? 'Готова' : 'Не готова'}<br>
+                        Режим глаз: ${data.require_eyes_for_face ? 'ВКЛ' : 'ВЫКЛ'}<br>
+                        Сначала соберите данные и обучите модель
+                    </small>
+                `;
+            }
+
+            document.getElementById('model-info').innerHTML = infoHtml;
+
+            // Обновляем чекбокс
+            document.getElementById('require-eyes-switch').checked = data.require_eyes_for_face;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('model-info').innerHTML = `
+                <div class="text-danger">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    Ошибка загрузки информации
+                </div>
+            `;
+        });
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.remove();
+        }
+    }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadModelInfo();
+    loadPeopleList();
+    updateStats();
+    
+    // Обновляем статистику каждые 2 секунды
+    setInterval(updateStats, 2000);
+});
+
+document.getElementById('require-eyes-switch').addEventListener('change', function() {
+    fetch('/api/toggle_eye_requirement', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: this.checked })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(
+                data.require_eyes_for_face ? 'Режим "обязательные глаза" включён' : 'Режим "обязательные глаза" выключен',
+                'info'
+            );
+        }
+    });
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,512 @@
+[
+  {
+    "timestamp": "2025-09-19T09:49:28.658793",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T09:49:43.526821",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T09:49:46.388127",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T09:56:48.741052",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T09:56:50.273284",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T09:59:06.746994",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T09:59:08.429208",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T09:59:23.251222",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T10:18:22.847553",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T10:18:26.977540",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T10:23:00.651100",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T10:46:55.837478",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T10:58:58.490034",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:02:17.686457",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:05:26.838244",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:07:44.712972",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:16:53.100170",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:22:54.348061",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:25:05.496756",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:30:02.051005",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:31:51.384528",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:36:30.900754",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:43:32.613340",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:48:20.638552",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:50:23.089606",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:53:37.258604",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T11:59:05.578423",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T12:09:03.578623",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T12:12:39.048988",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T12:17:36.158923",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T12:18:49.119075",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T12:20:41.218986",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T12:21:55.598798",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-19T12:25:58.612900",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  }
+]
