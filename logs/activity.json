@@ -508,5 +508,110 @@
     "face_cascade_loaded": true,
     "eye_cascade_loaded": true,
     "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-24T14:14:05.916497",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-24T14:36:11.534663",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-24T14:37:33.801935",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-24T14:39:35.697779",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-24T14:40:29.333353",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-24T14:46:29.357034",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
+  },
+  {
+    "timestamp": "2025-09-24T14:54:07.235504",
+    "is_collecting": false,
+    "collected_count": 0,
+    "current_person": "",
+    "model_trained": true,
+    "people_count": 2,
+    "people_names": [
+      "Evgeniy",
+      "gospozha"
+    ],
+    "face_cascade_loaded": true,
+    "eye_cascade_loaded": true,
+    "require_eyes_for_face": true
   }
 ]

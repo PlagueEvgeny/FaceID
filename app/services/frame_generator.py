@@ -179,6 +179,13 @@ def generate_frames():
                                 text_color = (0, 0, 0)
                                 config.recognition_stats['known_faces'] += 1
                                 config.recognition_stats['last_recognized'] = config.original_name
+
+                                try:
+                                    if config.serial_port and config.serial_port.is_open:
+                                        config.serial_port.write(b"SERVO:120\n")
+                                        print("Команда отправлена: SERVO:120")
+                                except Exception as e:
+                                    print(f"Ошибка отправки в Serial: {e}")
                                 
                                 # Добавляем уровень уверенности
                                 confidence_text = f"Уверенность: {100-confidence:.0f}%"

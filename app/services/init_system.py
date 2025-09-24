@@ -5,7 +5,17 @@ from app.services.models import load_model, train_model
 
 import os
 import cv2
+import serial
 
+def init_serial():
+    try:
+        config.serial_port = serial.Serial(config.SERIAL_PORT, config.SERIAL_BAUD, timeout=1)
+        print(f"Serial порт {config.SERIAL_PORT} открыт")
+        return True
+    except Exception as e:
+        print(f"Ошибка открытия Serial порта: {e}")
+        config.serial_port = None
+        return False
 
 def init_camera():
     if config.camera is not None:
@@ -105,6 +115,11 @@ def initialize_system():
         print("Каскад глаз успешно инициализирован")
     else:
         print("ВНИМАНИЕ: не удалось инициализировать каскад глаз")
+    
+    if init_serial():
+        print("Serial port успешно инициализирован")
+    else:
+        print("ВНИМАНИЕ: не удалось инициализировать Serial port")
     
     # Восстанавливаем оригинальные имена из существующих директорий
     if os.path.exists(config.DATASET_DIR):
