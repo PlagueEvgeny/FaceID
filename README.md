@@ -89,8 +89,7 @@ http://127.0.0.1:5000
 ├── 📁 logs
 │   └── 📄 activity.json
 ├── 📄 .gitignore
-├── 📄 123.py
-├── 📄 PROJECT_TREE.md
+├── 📄 LICENSE
 ├── 📄 README.md
 └── 📄 requirements.txt
 ```
@@ -177,4 +176,4 @@ http://127.0.0.1:5000
 
 ## 📄 Лицензия
 
-LGPL-2.1 license - см. файл LICENSE для деталей.
+GPL-3.0 license - см. файл LICENSE для деталей.
