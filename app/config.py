@@ -2,7 +2,7 @@ from pathlib import Path
 
 import serial
 
-SERIAL_PORT = "COM8"   # или "/dev/ttyUSB0" под Linux
+SERIAL_PORT = "COM9"   # или "/dev/ttyUSB0" под Linux
 SERIAL_BAUD = 115200
 serial_port = None
 # Базовые пути
@@ -36,7 +36,7 @@ UNKNOWN_THRESHOLD = 80
 # Camera settings
 camera = None
 camera_settings = {
-    "index": 0,
+    "index": 1,
     "width": 640,
     "height": 480,
     "fps": 30
